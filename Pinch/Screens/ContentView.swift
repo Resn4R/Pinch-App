@@ -71,6 +71,10 @@ struct ContentView: View {
                     .padding(.top, 30)
                 , alignment: .top
             )
+            .overlay(alignment: .bottom) {
+                ControlPanelView(scale: $imageScale, offset: $imageOffset)
+                
+            }
         }//:Navigation
     }
 }
