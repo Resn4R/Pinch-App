@@ -13,6 +13,9 @@ struct ContentView: View {
     @State private var imageOffset: CGSize = .zero
     @State private var isDrawerOpen = false
     
+    let pages = pagesData
+    @State private var pageIndex = 0
+    
     func resetImageState() {
         return withAnimation(.spring()) {
             imageScale = 1
@@ -25,7 +28,7 @@ struct ContentView: View {
             ZStack{
                 Color.clear
                 //MARK: PAGE IMAGE
-                Image("magazine-front-cover")
+                Image(pages[pageIndex].imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -109,14 +112,28 @@ struct ContentView: View {
                             }
                         }
                     
-                    Spacer()
+                    ForEach(pages) { item in
+                        Image(item.thumbnailName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .shadow(radius: 4)
+                            .opacity(isDrawerOpen ? 1 : 0)
+                            .animation(.easeOut(duration: 0.45), value: isDrawerOpen)
+                            .onTapGesture {
+                                isAnimating = true
+                                pageIndex = item.id
+                            }
+                    }
                     
+                    Spacer()
                 }
                     .padding(EdgeInsets(top: 16, leading: 8, bottom: 16, trailing: 8))
                     .background(.ultraThinMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .opacity(isAnimating ? 1 : 0)
-                    .frame(width: 200)
+                    .frame(width: 250)
                     .padding(.top, UIScreen.main.bounds.height / 12)
                     .offset(x: isDrawerOpen ? 20 : 215)
                 , alignment: .topTrailing
